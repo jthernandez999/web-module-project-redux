@@ -3,15 +3,17 @@ import { addMovie } from './../actions/movieActions';
 import { connect } from 'react-redux';
 
 import { Link, useHistory } from 'react-router-dom';
+import movies from '../data';
 
 const AddMovieForm = (props) => {
     const { push } = useHistory();
 
     const [movie, setMovie] = useState({
+        id: movies.length,
         title: "",
         director: "",
-        genre: "",
         metascore: 0,
+        genre: "",
         description:""
     });
 
@@ -23,9 +25,13 @@ const AddMovieForm = (props) => {
     }
 
     const handleSubmit = (e) => {
+        e.preventDefault();
+        props.addMovie(movie)
+        push('/movies/')
     }
 
     const { title, director, genre, metascore, description } = movie;
+    
     return(<div className="col">
         <div className="modal-dialog">
             <div className="modal-content">
@@ -55,10 +61,10 @@ const AddMovieForm = (props) => {
                             <label>Description</label>
                             <textarea value={description} onChange={handleChange} name="description" className="form-control"></textarea>
                         </div>
-                        			
+
                     </div>
                     <div className="modal-footer">
-                        <input type="submit" className="btn btn-success" value="Add"/>
+                        <input type="submit" className="btn btn-success" value="Add" onClick={handleSubmit}/>
                         <Link to={`/movies`}><input type="button" className="btn btn-default" value="Cancel"/></Link>
                     </div>
                 </form>
@@ -67,4 +73,4 @@ const AddMovieForm = (props) => {
     </div>);
 }
 
-export default AddMovieForm;
+export default connect(null, { addMovie })(AddMovieForm);
